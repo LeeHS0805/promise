@@ -7,11 +7,14 @@ class MyPromise {
     this.status = PENDING;
     this.value = undefined;
     this.reason = undefined;
+    this.onFufilledCallbacks = [];
+    this.onRejectedCallbacks = [];
 
     const resolve = (value) => {
       if ((this.status = PENDING)) {
         this.status = FUFILLED;
-        this.value = this.value;
+        this.value = value;
+        this.onFufilledCallbacks.forEach(fn=>fn())
       }
     };
     const reject = (reason) => {
@@ -19,9 +22,10 @@ class MyPromise {
         this.status = REJECTED;
         this.reason = reason;
       }
+      this.onRejectedCallbacks.forEach(fn=>fn())
     };
     try {
-        excutor(resove,reject)
+        excutor(resolve,reject)
     } catch (error) {
         reject(error)
     }
@@ -32,6 +36,14 @@ class MyPromise {
     }
     if(this.status==REJECTED){
         onRejected(this.reason)
+    }
+    if(this.status=PENDING){
+      this.onFufilledCallbacks.push(()=>{
+        onFufilled(this.value)
+      })
+      this.onRejectedCallbacks.push(()=>{
+        onRejected(this.reason)
+      })
     }
   }
 }

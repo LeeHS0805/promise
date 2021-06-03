@@ -1,10 +1,12 @@
 const MyPromise = require('./MyPromise')
 
 let promise = new MyPromise((resovle,reject)=>{
-    resovle(11)
-    throw new Error('111ss');
+    setTimeout(()=>{
+        resovle(11222)
+    },400)
+    // throw new Error('111ss');
 }).then(data=>{
     console.log(data);
 },error=>{
-    console.log(111);
+    console.log(error);
 })
